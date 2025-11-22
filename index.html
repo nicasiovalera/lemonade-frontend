@@ -1,135 +1,113 @@
+<!-- file: templates/index.html -->
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Puesto de Limonadas</title>
-<style>
-  body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:18px}
-  .box{max-width:820px;margin:0 auto;background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 20px rgba(10,20,30,0.06)}
-  h1{text-align:center;margin:0 0 12px 0}
-  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-  label{font-weight:600;font-size:14px;margin-top:10px;display:block}
-  input{padding:8px;border-radius:8px;border:1px solid #e6ecf0}
-  button{padding:9px 12px;border-radius:8px;border:none;background:#0b84ff;color:#fff;cursor:pointer}
-  .status{display:flex;gap:12px;justify-content:space-between;margin:12px 0}
-  .card{background:#fbfdff;padding:12px;border-radius:8px}
-  #msg{margin-top:12px;padding:10px;background:#eef7ff;border-radius:8px;color:#0b3b5a}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Puesto de Limonadas - Aula</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-  <div class="box">
-    <h1>Puesto de Limonadas</h1>
-
-    <div class="status">
-      <div class="card">
-        <div><strong>Día</strong></div>
-        <div id="day">—</div>
+  <div class="wrap">
+    <header class="header">
+      <div class="left">
+        <img class="logo" src="/mnt/data/BF71922A-EA8A-47BA-BFC4-4FC25E7792E7.jpeg" alt="logo" onerror="this.style.display='none'">
+        <div>
+          <h1>Puesto de Limonadas — Didáctico</h1>
+          <p class="lead">Gestiona tu puesto y aprende: Balance, Cuenta de Resultados y Flujo de Caja.</p>
+        </div>
       </div>
-      <div class="card">
-        <div><strong>Dinero</strong></div>
-        <div id="money">—</div>
+      <div class="right">
+        <button id="btn-reset" class="btn ghost">Reiniciar</button>
       </div>
-      <div class="card">
-        <div><strong>Clima</strong></div>
-        <div id="weather">—</div>
-      </div>
-    </div>
+    </header>
 
-    <h3>Inventario</h3>
-    <div class="row">
-      <div>Limones: <span id="lemons">0</span></div>
-      <div>Azúcar: <span id="sugar">0</span></div>
-      <div>Vasos: <span id="cups">0</span></div>
-    </div>
+    <main class="main">
+      <section class="panel estado">
+        <h2>Estado</h2>
+        <div class="grid">
+          <div><strong>Día:</strong> <span id="dia">-</span></div>
+          <div><strong>Caja:</strong> <span id="caja">- €</span></div>
+          <div><strong>Precio:</strong> <span id="precio">- €</span></div>
+          <div><strong>Producidas hoy:</strong> <span id="producidas_hoy">0</span></div>
+        </div>
 
-    <h3>Comprar</h3>
-    <label>Limones</label><input id="buyLemons" type="number" min="0" />
-    <label>Azúcar</label><input id="buySugar" type="number" min="0" />
-    <label>Vasos</label><input id="buyCups" type="number" min="0" />
-    <div style="margin-top:8px"><button onclick="buy()">Comprar</button></div>
+        <h3>Inventario</h3>
+        <div class="grid inventario">
+          <div>Limones: <span id="inv_limones">0</span></div>
+          <div>Azúcar: <span id="inv_azucar">0</span></div>
+          <div>Vasos: <span id="inv_vasos">0</span></div>
+          <div>Limonada lista: <span id="inv_limonada">0</span></div>
+        </div>
 
-    <h3>Precio y producción</h3>
-    <label>Precio por vaso (€)</label><input id="price" type="number" step="0.1" min="0.1" />
-    <div style="margin-top:8px"><button onclick="setPrice()">Fijar precio</button></div>
+        <div id="resumen" class="resumen"></div>
+      </section>
 
-    <label>Producir (cantidad)</label><input id="produceQty" type="number" min="0" />
-    <div style="margin-top:8px"><button onclick="produce()">Producir</button></div>
+      <section class="panel controles">
+        <h2>Decisiones</h2>
 
-    <div style="margin-top:12px" class="row">
-      <button onclick="simulateDay()">Simular Día</button>
-      <button onclick="resetGame()" style="background:#6b7280">Reiniciar Juego</button>
-    </div>
+        <label>Fijar precio (€)</label>
+        <div class="row">
+          <input id="input_precio" type="number" step="0.1" min="0.1" placeholder="1.0">
+          <button id="btn_precio" class="btn">Fijar</button>
+        </div>
 
-    <div id="msg">Estado y mensajes aparecerán aquí.</div>
+        <label>Comprar ingredientes</label>
+        <div class="row">
+          <input id="c_limones" type="number" min="0" placeholder="limones">
+          <input id="c_azucar" type="number" min="0" placeholder="azúcar">
+          <input id="c_vasos" type="number" min="0" placeholder="vasos">
+          <button id="btn_comprar" class="btn">Comprar</button>
+        </div>
+
+        <label>Producir limonada (unidades)</label>
+        <div class="row">
+          <input id="p_q" type="number" min="0" placeholder="cantidad">
+          <button id="btn_producir" class="btn">Producir</button>
+        </div>
+
+        <label>Publicidad (gastar €)</label>
+        <div class="row">
+          <input id="pub" type="number" min="0" placeholder="€">
+          <button id="btn_simular" class="btn primary">Simular día</button>
+        </div>
+
+      </section>
+
+      <section class="panel finanzas">
+        <h2>Estados financieros</h2>
+
+        <div class="sub">
+          <h3>Balance</h3>
+          <div id="balance_activo"></div>
+          <div id="balance_pasivo"></div>
+          <div class="exp">El ACTIVO muestra lo que tiene la empresa. El PASIVO y PATRIMONIO muestran cómo se financia.</div>
+        </div>
+
+        <div class="sub">
+          <h3>Cuenta de resultados</h3>
+          <div id="cuenta_resultados"></div>
+          <div class="exp">Aquí ves ingresos por ventas y costes asociados. Beneficio = ingresos - costes - gastos.</div>
+        </div>
+
+        <div class="sub">
+          <h3>Flujo de efectivo</h3>
+          <div id="flujo_efectivo"></div>
+          <div class="exp">La caja muestra lo que tienes disponible ahora (cobros - pagos).</div>
+        </div>
+      </section>
+
+      <section class="panel historial">
+        <h2>Historial (últimos días)</h2>
+        <div id="historial"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>Enseñanza: compara beneficios y caja — piensa por qué pueden diferir.</small>
+    </footer>
   </div>
 
-<script>
-// ❗ SOLO CAMBIA ESTA LÍNEA por la URL que Render te dio
-const BASE = "https://limonade-backend.onrender.com";
-
-async function getState(){
-  const r = await fetch(BASE + "/state");
-  return r.json();
-}
-
-async function load(){
-  try{
-    const s = await getState();
-    document.getElementById("day").innerText = s.day + " / " + s.total_days;
-    document.getElementById("money").innerText = s.money.toFixed(2) + " €";
-    document.getElementById("weather").innerText = s.weather;
-    document.getElementById("lemons").innerText = s.lemons;
-    document.getElementById("sugar").innerText = s.sugar;
-    document.getElementById("cups").innerText = s.cups;
-    document.getElementById("msg").innerText = s.message || "";
-  }catch(e){
-    document.getElementById("msg").innerText = "No se pudo conectar con el backend. Revisa la URL.";
-  }
-}
-
-async function buy(){
-  await fetch(BASE + "/buy", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-      lemons: Number(document.getElementById("buyLemons").value || 0),
-      sugar: Number(document.getElementById("buySugar").value || 0),
-      cups: Number(document.getElementById("buyCups").value || 0)
-    })
-  });
-  load();
-}
-
-async function setPrice(){
-  await fetch(BASE + "/set_price", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ price: Number(document.getElementById("price").value || 0) })
-  });
-  load();
-}
-
-async function produce(){
-  await fetch(BASE + "/produce", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ qty: Number(document.getElementById("produceQty").value || 0) })
-  });
-  load();
-}
-
-async function simulateDay(){
-  await fetch(BASE + "/simulate", { method:"POST" });
-  load();
-}
-
-async function resetGame(){
-  await fetch(BASE + "/reset", { method:"POST" });
-  load();
-}
-
-load();
-</script>
+  <script src="/static/js/main.js"></script>
 </body>
 </html>
